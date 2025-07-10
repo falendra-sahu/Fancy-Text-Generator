@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fancy Text Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-light: #818cf8;
+            --primary-dark: #4f46e5;
+            --accent-color: #f43f5e;
+            --accent-light: #fb7185;
+            --success-color: #10b981;
+            --success-dark: #059669;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --text-light: #64748b;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius-sm: 0.25rem;
+            --radius-md: 0.375rem;
+            --radius-lg: 0.5rem;
+            --transition: all 0.3s ease;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 0.95rem;
+            --font-size-lg: 1.125rem;
+            --font-size-xl: 1.25rem;
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 0.75rem;
+            --spacing-lg: 1rem;
+        }
+        
+        .dark-mode {
+            --primary-color: #818cf8;
+            --primary-light: #a5b4fc;
+            --primary-dark: #4f46e5;
+            --accent-color: #f43f5e;
+            --accent-light: #fb7185;
+            --success-color: #10b981;
+            --success-dark: #059669;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f1f5f9;
+            --text-light: #94a3b8;
+            --border-color: #334155;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 100%;
+            overflow-x: hidden;
+            transition: var(--transition);
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 1px 1px, var(--border-color) 1px, transparent 0);
+            background-size: 40px 40px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--primary-light) 0%, transparent 70%);
+            opacity: 0.1;
+            z-index: -1;
+        }
+        
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--bg-color);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+        
+        .theme-toggle:hover {
+            background-color: var(--primary-light);
+            color: white;
+            transform: rotate(30deg);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: var(--font-size-xl);
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+            border-radius: 2px;
+        }
+
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+            position: relative;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: var(--font-size-base);
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+        
+        label::before {
+            content: '✏️';
+            font-size: var(--font-size-lg);
+        }
+
+        textarea {
+            width: 100%;
+            padding: var(--spacing-md);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-base);
+            min-height: 80px;
+            resize: vertical;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+        
+        textarea::placeholder {
+            color: var(--text-light);
+            opacity: 0.7;
+        }
+
+        .button-container {
+            display: flex;
+            gap: var(--spacing-sm);
+            flex-wrap: wrap;
+            margin-top: var(--spacing-sm);
+        }
+
+        button {
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+            z-index: -1;
+        }
+
+        .generate-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            flex-grow: 2;
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+        }
+        
+        .generate-btn::before {
+            content: '✨';
+            font-size: 18px;
+        }
+
+        .clear-btn {
+            background: linear-gradient(135deg, var(--accent-color), #e11d48);
+            color: white;
+            flex-grow: 1;
+            box-shadow: 0 4px 10px rgba(244, 63, 94, 0.3);
+        }
+        
+        .clear-btn::before {
+            content: '🧹';
+            font-size: 18px;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        .output-section {
+            display: none;
+            flex-direction: column;
+            gap: var(--spacing-md);
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .output-container {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .output-container:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-light);
+        }
+        
+        .output-container::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 5px;
+            background: linear-gradient(to bottom, var(--primary-color), var(--primary-light));
+            border-radius: 5px 0 0 5px;
+        }
+
+        .style-name {
+            font-weight: 600;
+            font-size: var(--font-size-base);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+        
+        .style-name::before {
+            content: '🔠';
+            font-size: var(--font-size-lg);
+        }
+        
+        .style-name[data-style="Math Bold"]::before,
+        .style-name[data-style="Emoji Numbers"]::before {
+            content: '🔢';
+        }
+
+        .styled-text {
+            padding: var(--spacing-sm);
+            background-color: var(--card-bg);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            font-size: var(--font-size-base);
+            word-break: break-all;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            letter-spacing: 0.5px;
+        }
+        
+        .styled-text:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+        }
+
+        .copy-btn {
+            background: linear-gradient(135deg, var(--success-color), var(--success-dark));
+            color: white;
+            align-self: flex-end;
+            padding: var(--spacing-xs) var(--spacing-md);
+            box-shadow: 0 2px 5px rgba(16, 185, 129, 0.3);
+        }
+
+        .copy-btn::before {
+            content: '📋';
+            font-size: var(--font-size-sm);
+        }
+
+        .copy-success {
+            background: var(--success-dark);
+        }
+        
+        .copy-success::before {
+            content: '✅';
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: var(--spacing-sm);
+                max-width: 100%;
+            }
+
+            h1 {
+                font-size: var(--font-size-lg);
+                margin-bottom: var(--spacing-md);
+            }
+
+            button {
+                padding: var(--spacing-xs) var(--spacing-md);
+                font-size: var(--font-size-sm);
+            }
+
+            .button-container {
+                flex-direction: row;
+            }
+
+            .styled-text {
+                font-size: var(--font-size-sm);
+                padding: var(--spacing-sm);
+                min-height: 40px;
+            }
+            
+            .theme-toggle {
+                top: var(--spacing-xs);
+                right: var(--spacing-xs);
+                width: 30px;
+                height: 30px;
+                font-size: var(--font-size-base);
+            }
+            
+            .output-container {
+                padding: var(--spacing-sm);
+                gap: var(--spacing-xs);
+            }
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="theme-toggle" id="theme-toggle">🌙</button>
+        <h1>Fancy Text Generator</h1>
+        
+        <div class="input-section">
+            <div class="input-container">
+                <label for="input-text">Enter your text:</label>
+                <textarea id="input-text" placeholder="Type something here..."></textarea>
+            </div>
+            
+            <div class="button-container">
+                <button class="generate-btn" id="generate-btn">Generate Fancy Text</button>
+                <button class="clear-btn" id="clear-btn">Clear</button>
+            </div>
+        </div>
+        
+        <div class="output-section" id="output-section">
+            <!-- Output containers will be generated here -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputText = document.getElementById('input-text');
+            const generateBtn = document.getElementById('generate-btn');
+            const clearBtn = document.getElementById('clear-btn');
+            const outputSection = document.getElementById('output-section');
+            
+            // Character mappings for different styles
+            const styles = {
+                'Box Font': {
+                    'a': '🅐', 'b': '🅑', 'c': '🅒', 'd': '🅓', 'e': '🅔', 'f': '🅕', 'g': '🅖', 'h': '🅗', 'i': '🅘',
+                    'j': '🅙', 'k': '🅚', 'l': '🅛', 'm': '🅜', 'n': '🅝', 'o': '🅞', 'p': '🅟', 'q': '🅠', 'r': '🅡',
+                    's': '🅢', 't': '🅣', 'u': '🅤', 'v': '🅥', 'w': '🅦', 'x': '🅧', 'y': '🅨', 'z': '🅩',
+                    'A': '🅐', 'B': '🅑', 'C': '🅒', 'D': '🅓', 'E': '🅔', 'F': '🅕', 'G': '🅖', 'H': '🅗', 'I': '🅘',
+                    'J': '🅙', 'K': '🅚', 'L': '🅛', 'M': '🅜', 'N': '🅝', 'O': '🅞', 'P': '🅟', 'Q': '🅠', 'R': '🅡',
+                    'S': '🅢', 'T': '🅣', 'U': '🅤', 'V': '🅥', 'W': '🅦', 'X': '🅧', 'Y': '🅨', 'Z': '🅩',
+                    '0': '⓿', '1': '➊', '2': '➋', '3': '➌', '4': '➍', '5': '➎', '6': '➏', '7': '➐', '8': '➑', '9': '➒'
+                },
+                'Circled Font': {
+                    'a': 'ⓐ', 'b': 'ⓑ', 'c': 'ⓒ', 'd': 'ⓓ', 'e': 'ⓔ', 'f': 'ⓕ', 'g': 'ⓖ', 'h': 'ⓗ', 'i': 'ⓘ',
+                    'j': 'ⓙ', 'k': 'ⓚ', 'l': 'ⓛ', 'm': 'ⓜ', 'n': 'ⓝ', 'o': 'ⓞ', 'p': 'ⓟ', 'q': 'ⓠ', 'r': 'ⓡ',
+                    's': 'ⓢ', 't': 'ⓣ', 'u': 'ⓤ', 'v': 'ⓥ', 'w': 'ⓦ', 'x': 'ⓧ', 'y': 'ⓨ', 'z': 'ⓩ',
+                    'A': 'Ⓐ', 'B': 'Ⓑ', 'C': 'Ⓒ', 'D': 'Ⓓ', 'E': 'Ⓔ', 'F': 'Ⓕ', 'G': 'Ⓖ', 'H': 'Ⓗ', 'I': 'Ⓘ',
+                    'J': 'Ⓙ', 'K': 'Ⓚ', 'L': 'Ⓛ', 'M': 'Ⓜ', 'N': 'Ⓝ', 'O': 'Ⓞ', 'P': 'Ⓟ', 'Q': 'Ⓠ', 'R': 'Ⓡ',
+                    'S': 'Ⓢ', 'T': 'Ⓣ', 'U': 'Ⓤ', 'V': 'Ⓥ', 'W': 'Ⓦ', 'X': 'Ⓧ', 'Y': 'Ⓨ', 'Z': 'Ⓩ',
+                    '0': '⓪', '1': '①', '2': '②', '3': '③', '4': '④', '5': '⑤', '6': '⑥', '7': '⑦', '8': '⑧', '9': '⑨'
+                },
+                'Square Font': {
+                    'a': '🄰', 'b': '🄱', 'c': '🄲', 'd': '🄳', 'e': '🄴', 'f': '🄵', 'g': '🄶', 'h': '🄷', 'i': '🄸',
+                    'j': '🄹', 'k': '🄺', 'l': '🄻', 'm': '🄼', 'n': '🄽', 'o': '🄾', 'p': '🄿', 'q': '🅀', 'r': '🅁',
+                    's': '🅂', 't': '🅃', 'u': '🅄', 'v': '🅅', 'w': '🅆', 'x': '🅇', 'y': '🅈', 'z': '🅉',
+                    'A': '🄰', 'B': '🄱', 'C': '🄲', 'D': '🄳', 'E': '🄴', 'F': '🄵', 'G': '🄶', 'H': '🄷', 'I': '🄸',
+                    'J': '🄹', 'K': '🄺', 'L': '🄻', 'M': '🄼', 'N': '🄽', 'O': '🄾', 'P': '🄿', 'Q': '🅀', 'R': '🅁',
+                    'S': '🅂', 'T': '🅃', 'U': '🅄', 'V': '🅅', 'W': '🅆', 'X': '🅇', 'Y': '🅈', 'Z': '🅉',
+                    '0': '0', '1': '1', '2': '2', '3': '3', '4': '4', '5': '5', '6': '6', '7': '7', '8': '8', '9': '9'
+                },
+                'Black Square Font': {
+                    'a': '🅰', 'b': '🅱', 'c': '🅲', 'd': '🅳', 'e': '🅴', 'f': '🅵', 'g': '🅶', 'h': '🅷', 'i': '🅸',
+                    'j': '🅹', 'k': '🅺', 'l': '🅻', 'm': '🅼', 'n': '🅽', 'o': '🅾', 'p': '🅿', 'q': '🆀', 'r': '🆁',
+                    's': '🆂', 't': '🆃', 'u': '🆄', 'v': '🆅', 'w': '🆆', 'x': '🆇', 'y': '🆈', 'z': '🆉',
+                    'A': '🅰', 'B': '🅱', 'C': '🅲', 'D': '🅳', 'E': '🅴', 'F': '🅵', 'G': '🅶', 'H': '🅷', 'I': '🅸',
+                    'J': '🅹', 'K': '🅺', 'L': '🅻', 'M': '🅼', 'N': '🅽', 'O': '🅾', 'P': '🅿', 'Q': '🆀', 'R': '🆁',
+                    'S': '🆂', 'T': '🆃', 'U': '🆄', 'V': '🆅', 'W': '🆆', 'X': '🆇', 'Y': '🆈', 'Z': '🆉',
+                    '0': '0', '1': '1', '2': '2', '3': '3', '4': '4', '5': '5', '6': '6', '7': '7', '8': '8', '9': '9'
+                },
+                'Math Bold': {
+                    '0': '𝟘', '1': '𝟙', '2': '𝟚', '3': '𝟛', '4': '𝟜', '5': '𝟝', '6': '𝟞', '7': '𝟟', '8': '𝟠', '9': '𝟡'
+                },
+                'Emoji Numbers': {
+                    '0': '0️⃣', '1': '1️⃣', '2': '2️⃣', '3': '3️⃣', '4': '4️⃣', '5': '5️⃣', '6': '6️⃣', '7': '7️⃣', '8': '8️⃣', '9': '9️⃣'
+                }
+            };
+            
+            // Function to convert text to a specific style
+            function convertToStyle(text, style) {
+                let result = '';
+                for (let i = 0; i < text.length; i++) {
+                    const char = text[i];
+                    if (style[char]) {
+                        result += style[char];
+                    } else {
+                        result += char; // Keep original character if no mapping exists
+                    }
+                }
+                return result;
+            }
+            
+            // Function to generate all styled versions
+            function generateStyledText() {
+                const text = inputText.value.trim();
+                if (!text) {
+                    alert('Please enter some text first!');
+                    return;
+                }
+                
+                // Clear previous outputs
+                outputSection.innerHTML = '';
+                outputSection.style.display = 'flex';
+                
+                // Add original text as first output
+                createOutputContainer('Original Text', text);
+                
+                // Generate each style
+                for (const styleName in styles) {
+                    const styledText = convertToStyle(text, styles[styleName]);
+                    createOutputContainer(styleName, styledText);
+                }
+            }
+            
+            // Function to create output container for each style
+            function createOutputContainer(styleName, styledText) {
+                const container = document.createElement('div');
+                container.className = 'output-container';
+                
+                const nameElement = document.createElement('div');
+                nameElement.className = 'style-name';
+                nameElement.textContent = styleName;
+                nameElement.setAttribute('data-style', styleName);
+                
+                const textElement = document.createElement('div');
+                textElement.className = 'styled-text';
+                textElement.textContent = styledText;
+                
+                const copyButton = document.createElement('button');
+                copyButton.className = 'copy-btn';
+                copyButton.textContent = 'Copy';
+                copyButton.addEventListener('click', function() {
+                    copyToClipboard(styledText, copyButton);
+                });
+                
+                container.appendChild(nameElement);
+                container.appendChild(textElement);
+                container.appendChild(copyButton);
+                
+                outputSection.appendChild(container);
+            }
+            
+            // Function to copy text to clipboard
+            function copyToClipboard(text, button) {
+                navigator.clipboard.writeText(text).then(function() {
+                    const originalText = button.textContent;
+                    button.textContent = 'Copied!';
+                    button.classList.add('copy-success');
+                    
+                    setTimeout(function() {
+                        button.textContent = originalText;
+                        button.classList.remove('copy-success');
+                    }, 2000);
+                }).catch(function(err) {
+                    console.error('Could not copy text: ', err);
+                    alert('Failed to copy text. Please try again.');
+                });
+            }
+            
+            // Function to clear all inputs and outputs
+            function clearAll() {
+                inputText.value = '';
+                outputSection.innerHTML = '';
+                outputSection.style.display = 'none';
+            }
+            
+            // Event listeners
+            generateBtn.addEventListener('click', generateStyledText);
+            clearBtn.addEventListener('click', clearAll);
+            
+            // Allow generating by pressing Enter in the textarea
+            inputText.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && e.ctrlKey) {
+                    e.preventDefault();
+                    generateStyledText();
+                }
+            });
+            
+            // Theme toggle functionality
+            const themeToggle = document.getElementById('theme-toggle');
+            themeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('dark-mode');
+                if (document.body.classList.contains('dark-mode')) {
+                    themeToggle.textContent = '☀️';
+                } else {
+                    themeToggle.textContent = '🌙';
+                }
+            });
+            
+            // Add animation to generate button
+            generateBtn.addEventListener('mouseover', function() {
+                this.style.animation = 'pulse 1s infinite';
+            });
+            
+            generateBtn.addEventListener('mouseout', function() {
+                this.style.animation = '';
+            });
+        });
+    </script>
+</body>
+</html>
