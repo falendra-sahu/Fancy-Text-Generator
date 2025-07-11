@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -503,10 +504,16 @@
                     '0': '0', '1': '1', '2': '2', '3': '3', '4': '4', '5': '5', '6': '6', '7': '7', '8': '8', '9': '9'
                 },
                 'Math Bold': {
+                    'a': '𝕒', 'b': '𝕓', 'c': '𝕔', 'd': '𝕕', 'e': '𝕖', 'f': '𝕗', 'g': '𝕘', 'h': '𝕙', 'i': '𝕚', 'j': '𝕛', 'k': '𝕜', 'l': '𝕝', 'm': '𝕞', 'n': '𝕟', 'o': '𝕠', 'p': '𝕡', 'q': '𝕢', 'r': '𝕣', 's': '𝕤', 't': '𝕥', 'u': '𝕦', 'v': '𝕧', 'w': '𝕨', 'x': '𝕩', 'y': '𝕪', 'z': '𝕫',
+                    'A': '𝔸', 'B': '𝔹', 'C': 'ℂ', 'D': '𝔻', 'E': '𝔼', 'F': '𝔽', 'G': '𝔾', 'H': 'ℍ', 'I': '𝕀', 'J': '𝕁', 'K': '𝕂', 'L': '𝕃', 'M': '𝕄', 'N': 'ℕ', 'O': '𝕆', 'P': 'ℙ', 'Q': 'ℚ', 'R': 'ℝ', 'S': '𝕊', 'T': '𝕋', 'U': '𝕌', 'V': '𝕍', 'W': '𝕎', 'X': '𝕏', 'Y': '𝕐', 'Z': 'ℤ',
                     '0': '𝟘', '1': '𝟙', '2': '𝟚', '3': '𝟛', '4': '𝟜', '5': '𝟝', '6': '𝟞', '7': '𝟟', '8': '𝟠', '9': '𝟡'
                 },
                 'Emoji Numbers': {
                     '0': '0️⃣', '1': '1️⃣', '2': '2️⃣', '3': '3️⃣', '4': '4️⃣', '5': '5️⃣', '6': '6️⃣', '7': '7️⃣', '8': '8️⃣', '9': '9️⃣'
+                },
+                'Leet Speak': {
+                    'a': '4', 'b': 'b', 'c': 'c', 'd': 'd', 'e': '3', 'f': 'f', 'g': '6', 'h': 'h', 'i': '1', 'j': 'j', 'k': 'k', 'l': 'l', 'm': 'm', 'n': 'n', 'o': '0', 'p': 'p', 'q': 'q', 'r': 'r', 's': '5', 't': '7', 'u': 'u', 'v': 'v', 'w': 'w', 'x': 'x', 'y': 'y', 'z': 'z',
+                    'A': '4', 'B': 'B', 'C': 'C', 'D': 'D', 'E': '3', 'F': 'F', 'G': '6', 'H': 'H', 'I': '1', 'J': 'J', 'K': 'K', 'L': 'l', 'M': 'M', 'N': 'N', 'O': '0', 'P': 'P', 'Q': 'Q', 'R': 'R', 'S': '5', 'T': '7', 'U': 'U', 'V': 'V', 'W': 'W', 'X': 'X', 'Y': 'Y', 'Z': 'Z'
                 }
             };
             
@@ -539,10 +546,16 @@
                 // Add original text as first output
                 createOutputContainer('Original Text', text);
                 
-                // Generate each style
+                // Add Leet Speak immediately after Original Text
+                const leetSpeakText = convertToStyle(text, styles['Leet Speak']);
+                createOutputContainer('Leet Speak', leetSpeakText);
+                
+                // Generate each remaining style
                 for (const styleName in styles) {
-                    const styledText = convertToStyle(text, styles[styleName]);
-                    createOutputContainer(styleName, styledText);
+                    if (styleName !== 'Leet Speak') { // Skip Leet Speak as it's already added
+                        const styledText = convertToStyle(text, styles[styleName]);
+                        createOutputContainer(styleName, styledText);
+                    }
                 }
             }
             
